@@ -5,6 +5,8 @@ type roll struct {
 	die2 int
 }
 
+// Method is just a value receiver, doesn't change roll
+// so it doesn't need a *roll
 func (r roll) IsDoubles() bool {
 	return r.die1 == r.die2
 }

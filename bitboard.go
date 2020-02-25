@@ -7,15 +7,16 @@ func BitboardMarbleCount(bb uint64) int {
 }
 
 func BitboardIsValid(bb uint64) bool {
-	return bb>>53 == 0 && BitboardMarbleCount(bb) <= 5
+	return bb&uint64(0xFFE0000000000000) == 0 && BitboardMarbleCount(bb) <= MarbleCount
 }
 
 func BitboardIsWon(bb uint64) bool {
-	return bb == 8725724278030336
+	return bb == 0x1F000000000000
 }
 
-func BitboardGet(bb uint64, hole int) uint64 {
-	return (bb & (uint64(1) << hole)) >> hole
+// Gets whether there is a marble at a hole
+func BitboardGet(bb uint64, hole int) bool {
+	return bb&(uint64(1)<<hole) != 0
 }
 
 func BitboardGetRange(bb uint64, from, to int) uint64 {
@@ -23,11 +24,11 @@ func BitboardGetRange(bb uint64, from, to int) uint64 {
 }
 
 func BitboardGetUnsafe(bb uint64) uint64 {
-	return bb & ((uint64(1) << 48) - 1)
+	return bb & uint64(0xFFFFFFFFFFFF)
 }
 
 func BitboardGetSafe(bb uint64) uint64 {
-	return bb & uint64(8725724278030336)
+	return bb & uint64(0x1F000000000000)
 }
 
 func BitboardSet(bb *uint64, hole int) {
@@ -36,22 +37,25 @@ func BitboardSet(bb *uint64, hole int) {
 
 func BitboardRemove(bb *uint64, hole int) {
 	// Safe, removes if hole is taken, unchanged otherwise
-	*bb = ^(^*bb | (uint64(1) << hole))
-}
-
-func BitboardQuickRemove(bb *uint64, hole int) {
-	*bb ^= uint64(1) << hole
+	//*bb = ^(^*bb | (uint64(1) << hole))
+	*bb &^= uint64(1) << hole
 }
 
 func BitboardGetMSB(bb uint64) int {
-	return 64 - bits.LeadingZeros64(bb)
+	if bb == 0 {
+		return -1
+	}
+	return 63 - bits.LeadingZeros64(bb)
 }
 
 func BitboardGetLSB(bb uint64) int {
+	if bb == 0 {
+		return -1
+	}
 	return bits.TrailingZeros64(bb)
 }
 
-func BitboardGetRotation(bb uint64, fromTeam, toTeam int) uint64 {
+func BitboardRotate(bb uint64, fromTeam, toTeam int) uint64 {
 	unsafeHoles := BitboardGetUnsafe(bb)
 	if fromTeam == toTeam {
 		return unsafeHoles

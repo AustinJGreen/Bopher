@@ -8,8 +8,8 @@ import (
 func TestNewRoll(t *testing.T) {
 	r1 := NewRoll(1, 2)
 	assert.NotNil(t, *r1)
-	assert.Equal(t, r1.die1, 1)
-	assert.Equal(t, r1.die2, 2)
+	assert.Equal(t, 1, r1.die1)
+	assert.Equal(t, 2, r1.die2)
 }
 
 func TestRoll_IsDoubles(t *testing.T) {
