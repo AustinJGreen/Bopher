@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
 )
 
@@ -34,4 +36,13 @@ func TestNotationRollFromString(t *testing.T) {
 
 func TestNotationHoleFromString(t *testing.T) {
 
+}
+
+func BenchmarkNotationRollFromString(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		die1 := 1 + rand.Intn(6)
+		die2 := 1 + rand.Intn(6)
+		rollStr := fmt.Sprintf("%d+%d", die1, die2)
+		NotationRollFromString(rollStr)
+	}
 }

@@ -1,6 +1,8 @@
 package main
 
-import "math/bits"
+import (
+	"math/bits"
+)
 
 func BitboardMarbleCount(bb uint64) int {
 	return bits.OnesCount64(bb)

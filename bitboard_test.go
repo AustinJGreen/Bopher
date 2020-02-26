@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
 )
 
@@ -158,4 +159,32 @@ func TestBitboardGetMSB(t *testing.T) {
 
 	var b uint64 = 0x8000000000000001
 	assert.Equal(t, 63, BitboardGetMSB(b))
+}
+
+func TestBitboardPopMSB(t *testing.T) {
+	var a uint64 = 0x1F0000000000F0
+
+	count := 0
+	for a != 0 {
+		before := a
+		value := BitboardPopMSB(&a)
+		assert.Equal(t, BitboardGetMSB(before), value)
+		count++
+	}
+
+	assert.Equal(t, 9, count)
+}
+
+func BenchmarkBitboardGet(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		BitboardGet(rand.Uint64(), rand.Intn(53))
+	}
+}
+
+func BenchmarkBitboardRotate(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		fromTeam := rand.Intn(TeamCount)
+		toTeam := rand.Intn(TeamCount)
+		BitboardRotate(rand.Uint64(), fromTeam, toTeam)
+	}
 }
