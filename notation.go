@@ -15,7 +15,7 @@ func NotationRollFromString(rollStr string) (*roll, error) {
 	}
 	num1 := int(rollStr[0] - 48)
 	num2 := int(rollStr[2] - 48)
-	roll := NewRoll(num1, num2)
+	roll := RollNew(num1, num2)
 	if num1 < 1 || num1 > 6 || num2 < 1 || num2 > 6 {
 		return nil, errors.New("roll out of range")
 	}

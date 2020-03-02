@@ -8,6 +8,16 @@ type transform struct {
 	prev       *transform
 }
 
+func TransformNew() *transform {
+	t := new(transform)
+	t.key = 0
+	t.removed = -1
+	t.toMove = 0
+	t.doublesCnt = 0
+	t.prev = nil
+	return t
+}
+
 func (t transform) IsValid() bool {
 	return t.key >= 0 && t.removed >= -1 && t.removed < 54 && t.toMove >= 0 && t.toMove <= TeamCount && t.doublesCnt <= 2
 }
